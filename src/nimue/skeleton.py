@@ -26,8 +26,8 @@ import sys
 
 from nimue import __version__
 
-__author__ = "Cristian Martinez"
-__copyright__ = "Cristian Martinez"
+__author__ = "Cogniteva SAS"
+__copyright__ = "Cogniteva SAS"
 __license__ = "MIT"
 
 _logger = logging.getLogger(__name__)

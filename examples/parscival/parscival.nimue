@@ -1,0 +1,176 @@
+version: "1.0"
+
+options:
+  trace:
+    venv_path: "/tmp/parrun/.venv"
+    retry_on_failure: 3
+    failure_exit_code: 96
+    remove_transient: always
+    console: always
+  test:
+    venv_path: "/tmp/partest/.venv"
+    retry_on_failure: 1
+    failure_exit_code: 96
+    remove_transient: on_success
+    console: on_error
+    show_test_log: on_error
+    max_report_lines: 50
+
+trace:
+  module:
+    version:
+      attributes_match:
+        - '.*version.*'
+  environment:
+    capture:
+      - FOO
+      - BAR
+    module_prefixes: true
+  exit_codes:
+    store_skip:
+    store_keep:
+      - 0
+  files:
+    read:
+      ignore:
+        - "/bin/"
+        - "/boot/"
+        - "/dev/"
+        - "/etc/"
+        - "/lib/"
+        - "/proc/"
+        - "/root/"
+        - "/sys/"
+        - "/usr/"
+        - "/var/"
+        - "/tmp/tmp*"
+        - "*/log/*"
+        - "*.log"
+        - "*/log-*"
+        - "*egg-info*"
+        - "*-transient-*"
+    write:
+      ignore:
+        - "/bin/"
+        - "/boot/"
+        - "/dev/"
+        - "/etc/"
+        - "/lib/"
+        - "/proc/"
+        - "/root/"
+        - "/sys/"
+        - "/usr/"
+        - "/var/"
+        - "/tmp/tmp*"
+        - "*/log/*"
+        - "*.log"
+        - "*/log-*"
+        - "*egg-info*"
+        - "*-transient-*"
+
+test:
+  module:
+    version:
+      attributes_match:
+        - '.*version.*'
+  after_run:
+  before_run:
+  exit_codes:
+    compare_skip:
+    compare_test:
+  comparing:
+    module:
+      version:
+        - plugin: 'comparing.metadata.semver'
+          policy: warn
+          enabled: true
+          params:
+            version: '${exec.module.version.__version__}'
+            expression: '>=${nrt.module.version.__version__}'
+    trace:
+      console:
+        stdout:
+          - plugin: 'comparing.console.content'
+            policy: warn
+            enabled: true
+            params:
+              min_similarity: 0.9
+              clean_patterns:
+                # "YYYY-MM-DD HH:MM:SS"
+                - '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+        stderr:
+          - plugin: 'comparing.console.content'
+            policy: warn
+            enabled: true
+            params:
+              min_similarity: 0.9
+              clean_patterns:
+                # "YYYY-MM-DD HH:MM:SS"
+                - '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+      exitcode:
+        - plugin: 'comparing.exitcode.value'
+          policy: reject
+          enabled: true
+          params:
+            expression: '${exec.trace.exitcode}<=${nrt.trace.exitcode}'
+      files:
+        read:
+          hdf5:
+            - plugin: 'comparing.files.hdf5'
+              policy: reject
+              enabled: true
+              params:
+          csv:
+            - plugin: 'comparing.files.csv'
+              policy: reject
+              enabled: true
+              params:
+          json:
+            - plugin: 'comparing.files.json'
+              policy: reject
+              enabled: true
+              params:
+          yaml:
+            - plugin: 'comparing.files.yaml'
+              enabled: true
+              params:
+          yml:
+            - plugin: 'comparing.files.yaml'
+              policy: reject
+              enabled: true
+              params:
+          default:
+            - plugin: 'comparing.files.default'
+              policy: reject
+              enabled: true
+              params:
+        written:
+          hdf5:
+            - plugin: 'comparing.files.hdf5'
+              policy: reject
+              enabled: true
+              params:
+          csv:
+            - plugin: 'comparing.files.csv'
+              policy: reject
+              enabled: true
+              params:
+          json:
+            - plugin: 'comparing.files.json'
+              policy: reject
+              enabled: true
+              params:
+          yaml:
+            - plugin: 'comparing.files.yaml'
+              enabled: true
+              params:
+          yml:
+            - plugin: 'comparing.files.yaml'
+              policy: reject
+              enabled: true
+              params:
+          default:
+            - plugin: 'comparing.files.default'
+              policy: reject
+              enabled: true
+              params:

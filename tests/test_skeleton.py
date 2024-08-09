@@ -2,8 +2,8 @@ import pytest
 
 from nimue.skeleton import fib, main
 
-__author__ = "Cristian Martinez"
-__copyright__ = "Cristian Martinez"
+__author__ = "Cogniteva SAS"
+__copyright__ = "Cogniteva SAS"
 __license__ = "MIT"
 
 

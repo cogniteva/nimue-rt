@@ -72,13 +72,38 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
+    "sphinxcontrib.mermaid",
+    "sphinx_markdown_tables",
+    "sphinx_copybutton",
+    "sphinx_design",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
+
+# Configure AutoStructify
+# https://recommonmark.readthedocs.io/en/latest/auto_structify.html
+def setup(app):
+    from recommonmark.transform import AutoStructify
+
+    params = {
+        "enable_auto_toc_tree": True,
+        "auto_toc_tree_section": "Contents",
+        "auto_toc_maxdepth": 2,
+        "enable_eval_rst": True,
+        "enable_math": True,
+        "enable_inline_math": True,
+    }
+    app.add_config_value("recommonmark_config", params, True)
+    app.add_transform(AutoStructify)
+
+
+# Enable markdown
+extensions.append("recommonmark")
+
 # The suffix of source filenames.
-source_suffix = ".rst"
+source_suffix = [".rst", ".md"]
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
@@ -87,8 +112,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "nimue"
-copyright = "2024, Cristian Martinez"
+project = "Nimue"
+copyright = "2024, Cogniteva SAS"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -146,21 +171,32 @@ pygments_style = "sphinx"
 # keep_warnings = False
 
 # If this is True, todo emits a warning for each TODO entries. The default is False.
-todo_emit_warnings = True
+todo_emit_warnings = False
 
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "alabaster"
+html_theme = "shibuya"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    "sidebar_width": "300px",
-    "page_width": "1200px"
+    "globaltoc_expand_depth": 2,
+    "toctree_titles_only": 'titles_only',
+    "discussion_url": "#",
+    # "sidebar_width": "300px",
+    # "page_width": "1200px"
+}
+
+html_context = {
+  "source_type": "github",
+  "source_user": "cogniteva",
+  "source_repo": "cogniteva/nimue",
+  "source_version": "master",
+  "source_docs_path": "/docs/"
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -175,7 +211,7 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-# html_logo = ""
+html_logo = "_static/nimue.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -196,7 +232,12 @@ html_static_path = ["_static"]
 # html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+html_sidebars = {
+  "**": [
+    "sidebars/localtoc.html",
+    "sidebars/edit-this-page.html",
+  ]
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -236,38 +277,61 @@ htmlhelp_basename = "nimue-doc"
 
 latex_elements = {
     # The paper size ("letterpaper" or "a4paper").
-    # "papersize": "letterpaper",
+    "papersize": "a4paper",
     # The font size ("10pt", "11pt" or "12pt").
-    # "pointsize": "10pt",
+    "pointsize": "10pt",
     # Additional stuff for the LaTeX preamble.
-    # "preamble": "",
+    'preamble': r'''
+        \usepackage{graphicx}
+        \usepackage{adjustbox}
+        \usepackage{caption}
+        \usepackage{float}
+        \usepackage{svg}
+
+        % Redefine \sphinxincludegraphics to center and optionally crop images
+        \renewcommand{\sphinxincludegraphics}[2][]{%
+            \begin{figure}[H]
+                \centering
+                \adjustbox{max width=\linewidth, clip}{\includegraphics[#1]{#2}}
+            \end{figure}
+        }
+    '''
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "nimue Documentation", "Cristian Martinez", "manual")
+    ("index", f"nimue-{version}.tex", "Nimue Documentation", "The Nimue Authors", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-# latex_logo = ""
+latex_logo = "_static/parscival.png"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-# latex_use_parts = False
+latex_use_parts = False
 
 # If true, show page references after internal links.
 # latex_show_pagerefs = False
 
 # If true, show URL addresses after external links.
-# latex_show_urls = False
+latex_show_urls = 'true'
 
 # Documents to append as an appendix to all manuals.
 # latex_appendices = []
 
 # If false, no module index is generated.
 # latex_domain_indices = True
+
+# mermaid_params = []
+mermaid_params = []
+
+# Convert Mermaid diagrams to SVG
+# mermaid_output_format = 'svg'
+
+#mermaid_cmd = 'mmdc'
+#svg_converter = 'inkscape'
 
 # -- External mapping --------------------------------------------------------
 python_version = ".".join(map(str, sys.version_info[0:2]))

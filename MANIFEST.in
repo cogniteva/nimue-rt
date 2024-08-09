@@ -1,0 +1,2 @@
+include src/nimue/version.ini
+global-exclude *~
