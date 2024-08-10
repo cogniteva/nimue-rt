@@ -47,6 +47,7 @@ def custom_version():
 if __name__ == "__main__":
     try:
         setup(
+          name="nimue-rt",
           use_scm_version=custom_version
         )
     except:  # noqa

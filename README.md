@@ -46,7 +46,7 @@ trace:
 2. Run a trace:
 
 ```bash
-nimue trace --config example.nimue your_module_name
+nimue trace --config example.nimue path/to/archive.nrt your_module_name
 ```
 
 3. Run a regression test:
@@ -67,7 +67,7 @@ nimue trace --config example.nimue path/to/archive.nrt your_module_name
 
 ### Running a Regression Test
 
-Once you have a trace archive, you can use Nimue RT to perform regression tests.
+Once you have a trace archive, you can use Nimue RT to perform non-regression tests.
 
 ```bash
 nimue test --config example.nimue path/to/archive.nrt
