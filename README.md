@@ -1,4 +1,7 @@
 # Nimue RT
+<p align="center">
+  <img src="https://raw.githubusercontent.com/cogniteva/nimue-rt/master/docs/_static/nimue-logo.png" alt="nimue-rt" height="256">
+</p>
 
 Nimue RT is an experimental regression testing framework designed to simplify and streamline the process of testing and validating Python modules. It supports a wide range of file formats, execution environments, and custom plugins to provide a flexible and powerful testing environment.
 
